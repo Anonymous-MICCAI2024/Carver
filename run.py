@@ -11,9 +11,9 @@ from config import INIT_TRAINER, SETUP_TRAINER, VERSION, CURRENT_FOLD, PATH_LIST
 import time
 
 
-def get_cross_validation_by_kbr_sample(path_list, fold_num, current_fold):
+def get_cross_validation_by_cardio_sample(path_list, fold_num, current_fold):
 
-    sid_csv_path = '/staff/ydli/projects/OReX/Data/UNet/origin_sid_map.csv'
+    sid_csv_path = '...'//origin id path
     df = pd.read_csv(sid_csv_path)
 
     path_str = ''
@@ -138,7 +138,7 @@ if __name__ == "__main__":
     # Training
     ###############################################
     if args.mode == 'train-cross':
-        for current_fold in range(3, FOLD_NUM + 1):
+        for current_fold in range(1, FOLD_NUM + 1):
             print("=== Training Fold ", current_fold, " ===")
             segnetwork = SemanticSeg(**INIT_TRAINER)
             print(get_parameter_number(segnetwork.net))
@@ -150,7 +150,6 @@ if __name__ == "__main__":
             segnetwork.trainer(**SETUP_TRAINER)
 
             print('run time:%.4f' % (time.time() - start_time))
-            break
 
 
     if args.mode == 'train':
@@ -170,7 +169,7 @@ if __name__ == "__main__":
     ###############################################
     elif args.mode == 'inf':
         test_path = TEST_PATH
-        current_fold = 5
+        current_fold = 1
         train_path, val_path = get_cross_validation_by_kbr_sample(test_path, FOLD_NUM, current_fold)
         print('test len: %d'%len(val_path))
         start_time = time.time()
