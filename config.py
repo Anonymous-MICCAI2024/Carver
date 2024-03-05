@@ -7,40 +7,11 @@ from utils import get_path_with_annotation,get_path_with_annotation_ratio,get_pa
 from utils import get_weight_path
 
 
-__disease__ = ['Cervical','Nasopharynx','Structseg_HaN','Structseg_THOR','SegTHOR','Lung']
-# __2d_net__ = ['unet_2d']  old ./ckpt
-__2d_net__ = ['unet','unet++','FPN','deeplabv3+','att_unet','res_unet']
-__trans_net__ = ['UTNet','UTNet_encoder','TransUNet','ResNet_UTNet','SwinUNet']
-__new_net__ = ['sfnet']
-__encoder_name__ = ['simplenet','resnet18','resnet34','resnet50','se_resnet50', \
-                   'resnext50_32x4d','timm-resnest14d','timm-resnest26d','timm-resnest50d', \
-                    'efficientnet-b4', 'efficientnet-b5']
-
-__new_encoder_name__ = ['swin_transformer','swinplusr18']
 __3d_net__ = ['unet_3d', 'se_res_unet', 'da_unet','da_se_unet','res_da_se_unet', 'UNETR', 'vnet', 'vnet_res', 'vnet_lite', 'vnet_se', 'vnet_da', 'vnet_res_se']
-__mode__ = ['2d','2d_clean','3d']
-
-json_path = {
-    'Cervical':'/staff/shijun/torch_projects/Med_Seg/converter/dcm_converter/static_files/Cervical_Oar.json',
-    'Nasopharynx':'/staff/shijun/torch_projects/Med_Seg/converter/dcm_converter/static_files/Nasopharynx_Oar.json',
-    'Liver':'/staff/shijun/torch_projects/Med_Seg/converter/dcm_converter/static_files/Liver_Oar.json',
-    'Stomach':'/staff/shijun/torch_projects/Med_Seg/converter/dcm_converter/static_files/Stomach_Oar.json',
-    'Structseg_HaN':'/staff/shijun/torch_projects/Med_Seg/converter/nii_converter/static_files/Structseg_HaN.json',
-    'Structseg_THOR':'/staff/shijun/torch_projects/Med_Seg/converter/nii_converter/static_files/Structseg_THOR.json',
-    'HaN_GTV':'/staff/shijun/torch_projects/Med_Seg/converter/nii_converter/static_files/HaN_GTV.json',
-    'THOR_GTV':'/staff/shijun/torch_projects/Med_Seg/converter/nii_converter/static_files/THOR_GTV.json',
-    'SegTHOR':'/staff/shijun/torch_projects/Med_Seg/converter/nii_converter/static_files/SegTHOR.json',
-    'Covid-Seg':'/staff/shijun/torch_projects/Med_Seg/converter/nii_converter/static_files/Covid-Seg.json', # competition
-    'Lung':'/staff/shijun/torch_projects/Med_Seg/converter/dcm_converter/static_files/Lung_Oar.json',
-    'Lung_Tumor':'/staff/shijun/torch_projects/Med_Seg/converter/dcm_converter/static_files/Lung_Tumor.json',
-    'Nasopharynx_Tumor':'/staff/shijun/torch_projects/Med_Seg/converter/dcm_converter/static_files/Nasopharynx_Tumor.json',
-    'Cervical_Tumor':'/staff/shijun/torch_projects/Med_Seg/converter/dcm_converter/static_files/Cervical_Tumor.json',
-    'EGFR':'/staff/shijun/torch_projects/Med_Seg/converter/dcm_converter/static_files/EGFR.json',
-    'LITS':'/staff/shijun/torch_projects/Med_Seg/converter/nii_converter/static_files/LITS.json', # competition
-}
+__mode__ = ['3d']
 
 
-DISEASE = 'kbr' 
+DISEASE = 'cardio' 
 MODE = '3d'
 NET_NAME = 'vnet'
 ENCODER_NAME = 'simplenet'
@@ -60,7 +31,7 @@ FOLD_NUM = 5
 CURRENT_FOLD = 5
 GPU_NUM = len(DEVICE.split(','))
 
-if DISEASE != 'kbr':
+if DISEASE != 'cardio':
     with open(json_path[DISEASE], 'r') as fp:
         info = json.load(fp)
 else:
@@ -92,68 +63,17 @@ except:
 #---------------------------------
 
 #--------------------------------- mode and data path setting
-kbr_3d_convexhull_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_points_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_convexhull_list_path = glob.glob(kbr_3d_convexhull_data_path+ '/*.hdf5')
 
-kbr_3d_points_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_points_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_points_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_points_list_path = glob.glob(kbr_3d_points_data_path+ '/*.hdf5')
-
-kbr_3d_poly_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_poly_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_points_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_poly_list_path = glob.glob(kbr_3d_poly_data_path+ '/*.hdf5')
-
-kbr_3d_profile_points_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_1_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d__profile_points_list_path = glob.glob(kbr_3d_profile_points_data_path+ '/*.hdf5')
-
-kbr_3d_profile_points_remove_1_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_1_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_1_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_profile_points_remove_1_list_path = glob.glob(kbr_3d_profile_points_remove_1_data_path+ '/*.hdf5')
-
-kbr_3d_profile_points_remove_2_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_2_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_1_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_profile_points_remove_2_list_path = glob.glob(kbr_3d_profile_points_remove_2_data_path+ '/*.hdf5')
-
-kbr_3d_profile_points_remove_3_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_3_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_1_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_profile_points_remove_3_list_path = glob.glob(kbr_3d_profile_points_remove_3_data_path+ '/*.hdf5')
-
-kbr_3d_profile_points_remove_4_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_4_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_1_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_profile_points_remove_4_list_path = glob.glob(kbr_3d_profile_points_remove_4_data_path+ '/*.hdf5')
-
-kbr_3d_profile_points_remove_5_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_5_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_1_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_profile_points_remove_5_list_path = glob.glob(kbr_3d_profile_points_remove_5_data_path+ '/*.hdf5')
-
-kbr_3d_profile_points_remove_6_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_6_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_1_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_profile_points_remove_6_list_path = glob.glob(kbr_3d_profile_points_remove_6_data_path+ '/*.hdf5')
-
-kbr_3d_profile_points_remove_7_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_7_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_1_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_profile_points_remove_7_list_path = glob.glob(kbr_3d_profile_points_remove_7_data_path+ '/*.hdf5')
-
-kbr_3d_profile_points_remove_8_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_8_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_mesh_remove_1_128_backup' # '/staff/ydli/projects/OReX/Data/UNet/hdf5_backup' 
-kbr_3d_profile_points_remove_8_list_path = glob.glob(kbr_3d_profile_points_remove_8_data_path+ '/*.hdf5')
-
-kbr_3d_profile_lines_data_path = '/staff/ydli/projects/OReX/Data/UNet/hdf5_profile_line_128_backup'
-kbr_3d_profile_lines_list_path = glob.glob(kbr_3d_profile_lines_data_path+ '/*.hdf5')
-
-kbr_ed_path = kbr_3d_convexhull_data_path + '/*ed.hdf5'
-kbr_ed_data_list = glob.glob(kbr_ed_path)    # os.dirs
-
-kbr_es_path = kbr_3d_convexhull_data_path + '/*es.hdf5'
-kbr_es_data_list = glob.glob(kbr_es_path)    # os.dirs
-
-if MODE == '2d_clean':
-    assert ROI_NUMBER is not None, "roi number must not be None in 2d clean"
-    PATH_LIST = get_path_with_annotation(info['2d_data']['csv_path'],'path',ROI_NAME)
-elif MODE == '2d':
-    PATH_LIST = glob.glob(os.path.join(info['2d_data']['save_path'],'*.hdf5'))
-    # PATH_LIST = get_path_with_annotation_ratio(info['2d_data']['csv_path'],'path',ROI_NAME,ratio=0.5)
-else:
-    PATH_LIST = kbr_3d__profile_points_list_path
+if MODE == '3d':
+    PATH_LIST = cardio_3d__profile_points_list_path
 #---------------------------------
 
 
 #--------------------------------- others
-INPUT_SHAPE = (128, 128 ,128) if MODE =='3d' else (512,512)#(512,512)
-BATCH_SIZE = 24 if MODE =='3d' else 32
+INPUT_SHAPE = (2, 128, 128 ,128) if MODE =='3d' 
+BATCH_SIZE = 24 if MODE =='3d' 
 
 
-# CKPT_PATH = './ckpt/{}/{}/{}/{}/fold{}'.format('Covid-Seg',MODE,'v1.0','Lesion',str(CURRENT_FOLD))
 CKPT_PATH = './new_ckpt/{}/{}/{}/{}/fold{}'.format(DISEASE,MODE,VERSION,ROI_NAME,str(CURRENT_FOLD))
 WEIGHT_PATH = get_weight_path(CKPT_PATH)
 print(WEIGHT_PATH)
@@ -208,13 +128,7 @@ SETUP_TRAINER = {
 }
 #---------------------------------
 
-TEST_PATH = kbr_3d__profile_points_list_path
+TEST_PATH = cardio_3d__profile_points_list_path
 
-
-if DISEASE in ['Cervical','Nasopharynx','Lung','Lung_Tumor']:
-    if MODE == '2d_clean':
-        TEST_PATH = get_path_with_annotation(info['2d_data']['test_csv_path'],'path',ROI_NAME)
-    elif MODE == '2d':
-        TEST_PATH = get_path_with_column(info['2d_data']['test_csv_path'],'path')
 
         
