@@ -47,7 +47,7 @@ def make_csl_from_mesh(filename, save_path, n_slices):
     _save_sliced_mesh(csl, faces, model_name, save_path, verts)
     return csl
 
-def make_csl_from_kbr(file_path, save_path, mode):
+def make_csl_from_cardio(file_path, save_path, mode):
     info_list, cali_info, mesh_text = parseXml(file_path)
     # print(info_list[1]['sid'])
     verts, faces, = read_kbr_mesh(mesh_text[mode])
@@ -81,7 +81,7 @@ def make_csl_from_kbr(file_path, save_path, mode):
     _save_sliced_mesh(csl, faces, model_name, save_path, verts)
     return csl
 
-def make_csl_from_kbr_without_ref(file_path, save_path, mode):
+def make_csl_from_cardio_without_ref(file_path, save_path, mode):
     info_list, cali_info, mesh_text = parseXml(file_path)
     # print(info_list[1]['sid'])
     verts, faces, = read_kbr_mesh(mesh_text[mode])
@@ -121,7 +121,7 @@ def make_csl_from_kbr_without_ref(file_path, save_path, mode):
     _save_sliced_mesh(csl, faces, model_name, save_path, verts)
     return csl
 
-def make_csl_from_kbr_without_ref_remove_m(file_path, save_path, mode, remove_num):
+def make_csl_from_cardio_without_ref_remove_m(file_path, save_path, mode, remove_num):
     info_list, cali_info, mesh_text = parseXml(file_path)
     # print(info_list[1]['sid'])
     verts, faces, = read_kbr_mesh(mesh_text[mode])
@@ -161,7 +161,7 @@ def make_csl_from_kbr_without_ref_remove_m(file_path, save_path, mode, remove_nu
     _save_sliced_mesh(csl, faces, model_name, save_path, verts)
     return csl
 
-def make_csl_from_kbr_with_ref_remove_m(file_path, save_path, mode, remove_num):
+def make_csl_from_cardio_with_ref_remove_m(file_path, save_path, mode, remove_num):
     info_list, cali_info, mesh_text = parseXml(file_path)
     # print(info_list[1]['sid'])
     verts, faces, = read_kbr_mesh(mesh_text[mode])
@@ -277,7 +277,7 @@ def _get_kbr_planes(info_list, cali_info, plane_scale, plane_vector, mode):
     ds = np.array(d_list)
     return normals, ds, trans_matrixs_list
 
-def _get_kbr_planes_remove_m(info_list, cali_info, plane_scale, plane_vector, mode, remove_num):
+def _get_cardio_planes_remove_m(info_list, cali_info, plane_scale, plane_vector, mode, remove_num):
     # return plane's normals and ds
 
     trans_matrixs_list = []
@@ -481,29 +481,25 @@ if __name__ == '__main__':
     #     except:
     #         print('slice error')
 
-    data_path = '/staff/ydli/projects/OReX/Data/kbr_patient_backup/'
-    with_ref_out_path = '/staff/ydli/projects/OReX/Data/kbr_w_ref_remove_8'
-    # without_ref_out_path = '/staff/ydli/projects/OReX/Data/kbr_wo_ref_remove_2'
+    data_path = '...'
+    with_ref_out_path = '...'
     if not os.path.exists(with_ref_out_path):
         os.makedirs(with_ref_out_path)
     # if not os.path.exists(without_ref_out_path):
     #     os.makedirs(without_ref_out_path)
 
-    for filename in os.listdir('/staff/ydli/projects/OReX/Data/kbr_patient_backup'):
+    for filename in os.listdir('...'):
         # print(filename)
         try:
             input_path = data_path+filename
             # print(input_path)
-            print(f'Slicing ' + filename)
             remove_num = 8
             ed_mode = 'ed'
             # csl_ed_wo_ref = make_csl_from_kbr_without_ref_remove_m(input_path, without_ref_out_path, ed_mode, remove_num)
             csl_ed_w_ref = make_csl_from_kbr_with_ref_remove_m(input_path, with_ref_out_path, ed_mode, remove_num)
-            print(f'Slicing ' + filename+' ed success')
             es_mode = 'es'
             # csl_es_wo_ref = make_csl_from_kbr_without_ref_remove_m(input_path, without_ref_out_path, es_mode, remove_num)
             csl_es_w_ref = make_csl_from_kbr_with_ref_remove_m(input_path, with_ref_out_path, es_mode, remove_num)
-            print(f'Slicing ' + filename+' es success')
         except:
             print(f'Slicing ' + filename+' failed')
 
